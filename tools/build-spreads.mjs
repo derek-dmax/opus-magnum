@@ -5,7 +5,7 @@
    masks and the magnifier in index.html all assume that geometry.
 
    SVG drawn as an image cannot load anything, so Instrument Serif is
-   embedded in every file.  Run from anywhere:  node opus-magnum/tools/build-spreads.mjs */
+   embedded in every file.  Run from anywhere:  node tools/build-spreads.mjs */
 import {readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
