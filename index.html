@@ -147,14 +147,14 @@ button{font:inherit}
 @media (min-width:1200px){
   .sb-3d{
     /* the paper is .397 of the frame's width tall; with the bands trimmed,
-       the paper plus caption and tools take about .426 of it, under ~310px
+       the paper plus caption and tools take about .426 of it, under ~330px
        of header */
-    --book:min(92vw,(100svh - 310px) * 2.73,2100px);
+    --book:min(92vw,(100svh - 330px) * 2.73,2100px);
     flex:0 0 auto;width:var(--book);max-width:none;
     margin-top:calc(var(--book) * -.157);
     margin-bottom:calc(var(--book) * -.146);
   }
-  .hero{padding-top:96px}
+  .hero{padding-top:112px;align-content:start}
 }
 .sb-tilt{
   position:relative;
