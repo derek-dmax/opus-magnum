@@ -136,6 +136,16 @@ button{font:inherit}
   position:relative;flex:1 1;min-width:0;max-width:900px;
   perspective:1750px;perspective-origin:50% 46%;
 }
+/* on large screens the book grows with the window, bounded by its height so
+   the spread still fits above the fold; the spreads' transparent bands above
+   and below the paper are partly pulled back in so the page stays compact */
+@media (min-width:1200px){
+  .sb-3d{
+    --book:min(76vw,(100svh - 150px) * 1.5,1600px);
+    flex:0 0 auto;width:var(--book);max-width:none;
+    margin-block:calc(var(--book) * -.08);
+  }
+}
 .sb-tilt{
   position:relative;
   transform-style:preserve-3d;
@@ -405,6 +415,7 @@ button{font:inherit}
 }
 
 .contact{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,48px)}
+.contact .bio{max-width:none}
 .contact-social{
   margin:20px 0 0;display:flex;flex-wrap:wrap;gap:22px;
   font-size:12px;letter-spacing:var(--track-caps);text-transform:uppercase;
