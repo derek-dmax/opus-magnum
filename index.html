@@ -6,12 +6,17 @@
 <title>Opus Magnum</title>
 <meta name="description" content="Opus Magnum: the vendor management system from Opus People Solutions, for temporary, contract and permanent staff.">
 <style>
-@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:block;
-  src:url(assets/instrument-serif.woff2) format('woff2')}
-@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:block;
-  src:url(assets/instrument-serif-italic.woff2) format('woff2')}
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:200 600;font-display:swap;
-  src:url(assets/newsreader.woff2) format('woff2')}
+/* Livvic, the shiftControl app's typeface, self-hosted (latin only) */
+@font-face{font-family:'Livvic';font-style:normal;font-weight:300;font-display:swap;
+  src:url(assets/livvic/livvic-300-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Livvic';font-style:normal;font-weight:400;font-display:swap;
+  src:url(assets/livvic/livvic-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Livvic';font-style:italic;font-weight:400;font-display:swap;
+  src:url(assets/livvic/livvic-400-italic-latin.woff2) format('woff2')}
+@font-face{font-family:'Livvic';font-style:normal;font-weight:500;font-display:swap;
+  src:url(assets/livvic/livvic-500-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Livvic';font-style:normal;font-weight:600;font-display:swap;
+  src:url(assets/livvic/livvic-600-normal-latin.woff2) format('woff2')}
 
 :root{
   --paper:#ece7dc;
@@ -20,8 +25,8 @@
   --ink-faint:rgba(43,39,33,.36);
   --hairline:rgba(43,39,33,.14);
   --earth:#9a6a3e;
-  --display:'Instrument Serif',"New York",Georgia,'Times New Roman',serif;
-  --font:'Newsreader',"New York",Georgia,'Times New Roman',serif;
+  --display:'Livvic',Arial,sans-serif;
+  --font:'Livvic',Arial,sans-serif;
   --track-caps:.24em;
   --track-nav:.06em;
 }
@@ -690,10 +695,11 @@ const PAGES=[
   {file:'release.svg',    title:'Release to agencies',           place:'Chapter II'},
   {file:'candidates.svg', title:'Candidates',                    place:'Chapter III'},
   {file:'placement.svg',  title:'Selection and placement',       place:'Chapter IV'},
-  {file:'shifts.svg',     title:'Shifts and compliance',         place:'Chapter V'},
-  {file:'invoicing.svg',  title:'Invoicing',                     place:'Chapter VI'},
-  {file:'exports.svg',    title:'Exports and payments',          place:'Chapter VII'},
-  {file:'audit.svg',      title:'Audit and IR35',                place:'Chapter VIII'}
+  {file:'timesheets.svg', title:'Timesheets and expenses',       place:'Chapter V'},
+  {file:'shifts.svg',     title:'Shifts and compliance',         place:'Chapter VI'},
+  {file:'invoicing.svg',  title:'Invoicing',                     place:'Chapter VII'},
+  {file:'exports.svg',    title:'Exports and payments',          place:'Chapter VIII'},
+  {file:'audit.svg',      title:'Audit and IR35',                place:'Chapter IX'}
 ];
 PAGES.forEach(p=>p.url=DIR+p.file);
 const M=PAGES.length, LAND=0;

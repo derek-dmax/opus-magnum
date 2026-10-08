@@ -4,16 +4,16 @@
    the paper inside x 5.1%-94.9% and y 21.8%-78.2%: the page-turn, the shade
    masks and the magnifier in index.html all assume that geometry.
 
-   SVG drawn as an image cannot load anything, so Instrument Serif is
-   embedded in every file.  Run from anywhere:  node tools/build-spreads.mjs */
+   SVG drawn as an image cannot load anything, so Livvic (the shiftControl
+   app's typeface) is embedded in every file.  Run from anywhere:  node tools/build-spreads.mjs */
 import {readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const font = f => readFileSync(join(ROOT, 'assets', f)).toString('base64');
-const FONTS = `@font-face{font-family:IS;font-style:normal;src:url(data:font/woff2;base64,${font('instrument-serif.woff2')}) format('woff2')}
-@font-face{font-family:IS;font-style:italic;src:url(data:font/woff2;base64,${font('instrument-serif-italic.woff2')}) format('woff2')}`;
+const FONTS = `@font-face{font-family:LV;font-style:normal;src:url(data:font/woff2;base64,${font('livvic/livvic-400-normal-latin.woff2')}) format('woff2')}
+@font-face{font-family:LV;font-style:italic;src:url(data:font/woff2;base64,${font('livvic/livvic-400-italic-latin.woff2')}) format('woff2')}`;
 
 /* paper bounds */
 const L0 = 90, MID = 880, R1 = 1670, T = 270, B = 970;
@@ -83,7 +83,7 @@ function book(body, n) {
     + text(RC, B - 34, String(n * 2 + 1), {size: 17, anchor: 'middle', fill: SOFT}) : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 1240" width="1760" height="1240">
 <defs>
-<style>${FONTS} text{font-family:IS,Georgia,'Times New Roman',serif}</style>
+<style>${FONTS} text{font-family:LV,Arial,sans-serif}</style>
 <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
   <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3"/>
   <feDisplacementMap in="SourceGraphic" scale="3.2"/>
@@ -124,15 +124,15 @@ const ink = s => `<g filter="url(#rough)">${s}</g>`;
 /* the left page of every chapter: numeral, title, a paragraph, three notes */
 function chapter(num, title, body, notes) {
   let s = caps(160, 352, 'Chapter ' + num);
-  const t = wrap(title, 26);
-  s += t.map((l, i) => text(160, 412 + i * 52, l, {size: 50, italic: true})).join('');
-  let y = 412 + (t.length - 1) * 52 + 34;
+  const t = wrap(title, 27);
+  s += t.map((l, i) => text(160, 410 + i * 48, l, {size: 40, italic: true})).join('');
+  let y = 410 + (t.length - 1) * 48 + 32;
   s += path(`M160 ${y} H290`, {stroke: EARTH, sw: 1.6});
-  const p = para(160, y + 48, body, {size: 24, lh: 35, chars: 62, fill: '#3a342c'});
+  const p = para(160, y + 48, body, {size: 20, lh: 33, chars: 54, fill: '#3a342c'});
   s += p.svg;
   y = p.end + 22;
   for (const n of notes) {
-    s += text(160, y, '—', {fill: EARTH, size: 21}) + text(192, y, n, {size: 21, italic: true, fill: SOFT});
+    s += text(160, y, '—', {fill: EARTH, size: 18}) + text(192, y, n, {size: 18, italic: true, fill: SOFT});
     y += 34;
   }
   return s;
@@ -142,8 +142,8 @@ const capRight = s => text(RC, B - 74, s, {size: 21, italic: true, anchor: 'midd
 /* ------------------------------------------------------------ spreads */
 const CHAPTERS = [
   ['I', 'Requests for staff'], ['II', 'Release to agencies'], ['III', 'Candidates'],
-  ['IV', 'Selection and placement'], ['V', 'Shifts and compliance'], ['VI', 'Invoicing'],
-  ['VII', 'Exports and payments'], ['VIII', 'Audit and IR35'],
+  ['IV', 'Selection and placement'], ['V', 'Timesheets and expenses'], ['VI', 'Shifts and compliance'],
+  ['VII', 'Invoicing'], ['VIII', 'Exports and payments'], ['IX', 'Audit and IR35'],
 ];
 
 const SPREADS = [];
@@ -152,7 +152,7 @@ const SPREADS = [];
 SPREADS.push({file: 'title.svg', svg: book(
   wash(485, 560, 250, 150, WASH.ochre, .32) + wash(560, 640, 160, 90, WASH.blue, .22)
   + caps(485, 420, 'Opus People Solutions', {anchor: 'middle', ls: 4.5})
-  + text(485, 560, 'Opus Magnum', {size: 104, italic: true, anchor: 'middle'})
+  + text(485, 560, 'Opus Magnum', {size: 84, italic: true, anchor: 'middle'})
   + ink(path('M395 600 H575', {stroke: EARTH, sw: 1.6}) + circle(485, 600, 5, {fill: EARTH, sw: 0}))
   + text(485, 656, 'A vendor management system for', {size: 25, anchor: 'middle', fill: '#3a342c'})
   + text(485, 690, 'temporary, contract and permanent staff', {size: 25, anchor: 'middle', fill: '#3a342c'})
@@ -160,7 +160,7 @@ SPREADS.push({file: 'title.svg', svg: book(
   /* contents */
   + caps(RC, 352, 'Contents', {anchor: 'middle', ls: 4.5})
   + CHAPTERS.map(([n, t], i) => {
-      const y = 430 + i * 56;
+      const y = 420 + i * 50;
       return text(990, y, n, {size: 20, fill: EARTH, anchor: 'end'})
         + text(1012, y, t, {size: 27, italic: true})
         + path(`M${1012 + t.length * 11.5 + 14} ${y - 6} H1530`, {stroke: SOFT, sw: 1.3, dash: '1 7'})
@@ -184,8 +184,8 @@ SPREADS.push({file: 'requests.svg', svg: book(
   + text(1115, 779, 'Hiring manager', {size: 22, anchor: 'middle'})
   + text(1225, 659, 'Line manager', {size: 22, anchor: 'middle'})
   + text(1335, 539, 'Head of service', {size: 22, anchor: 'middle'})
-  + text(1510, 404, 'Approved', {size: 22, italic: true, anchor: 'middle', fill: EARTH})
-  + text(1510, 430, 'FOR THE CLIENT', {size: 11, anchor: 'middle', fill: EARTH, ls: 2})
+  + text(1510, 404, 'Approved', {size: 17, italic: true, anchor: 'middle', fill: EARTH})
+  + text(1510, 428, 'FOR THE CLIENT', {size: 9, anchor: 'middle', fill: EARTH, ls: 1.2})
   + text(1405, 850, 'or the MSP, with a reason', {size: 19, italic: true, fill: EARTH})
   + capRight('A request climbs the reporting line before it goes anywhere.'),
   1)});
@@ -246,7 +246,7 @@ SPREADS.push({file: 'requests.svg', svg: book(
   st.forEach(([x, a, b], i) => {
     rings += circle(x, 470, 74, {stroke: i ? EARTH : INK, sw: 2.6}) + circle(x, 470, 62, {stroke: i ? EARTH : INK, sw: 1.2, dash: '2 5'})
       + arrow(x + (1255 - x) * .25, 552, x + (1255 - x) * .75, 650, {sw: 1.8});
-    labels += text(x, 466, a, {size: a.length > 11 ? 18 : 23, italic: true, anchor: 'middle'})
+    labels += text(x, 466, a, {size: a.length > 11 ? 15 : 21, italic: true, anchor: 'middle'})
       + text(x, 492, b.toUpperCase(), {size: 11, ls: 1.8, anchor: 'middle', fill: EARTH});
   });
   SPREADS.push({file: 'placement.svg', svg: book(
@@ -260,7 +260,54 @@ SPREADS.push({file: 'requests.svg', svg: book(
     4)});
 }
 
-/* V — the week, checked */
+/* V — timesheets and expenses */
+{
+  const x0 = 950, y0 = 340, w = 380, h = 430, days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  let g = rect(x0, y0, w, h, {fill: '#fbf7ee', r: 8}), lab = '';
+  lab += text(x0 + 26, y0 + 44, 'Timesheet', {size: 25, italic: true})
+    + text(x0 + 26, y0 + 70, 'WEEK COMMENCING 5 OCTOBER', {size: 10.5, ls: 1.6, fill: EARTH});
+  days.forEach((d, i) => {
+    const y = y0 + 116 + i * 38, on = i < 5;
+    lab += text(x0 + 26, y, d, {size: 17, fill: on ? INK : SOFT})
+      + text(x0 + 110, y, on ? 'Standard hour' : '—', {size: 15, fill: SOFT})
+      + text(x0 + w - 26, y, on ? '7.4' : '—', {size: 17, anchor: 'end', fill: on ? INK : SOFT});
+    g += path(`M${x0 + 20} ${y + 13} H${x0 + w - 20}`, {stroke: SOFT, sw: 1, dash: '2 5'});
+  });
+  const ty = y0 + 116 + 7 * 38 + 4;
+  g += path(`M${x0 + 20} ${ty - 22} H${x0 + w - 20}`, {sw: 1.6});
+  lab += text(x0 + 26, ty + 6, 'Total', {size: 19, italic: true}) + text(x0 + w - 26, ty + 6, '37.0 h', {size: 19, anchor: 'end'});
+  /* the approval stamp over the card's corner */
+  g += circle(1300, 372, 54, {stroke: EARTH, sw: 3, fill: '#f6ecdc'}) + circle(1300, 372, 43, {stroke: EARTH, sw: 1.2, dash: '2 5'});
+  lab += text(1300, 370, 'Approved', {size: 15, italic: true, anchor: 'middle', fill: EARTH})
+    + text(1300, 389, 'RATES FIXED', {size: 8.5, ls: 1.2, anchor: 'middle', fill: EARTH});
+  /* a receipt, torn along the bottom */
+  let zig = 'M1392 432 H1600 V676';
+  for (let x = 1600; x > 1392; x -= 13) zig += ` L${x - 6.5} 688 L${x - 13} 676`;
+  g += `<g transform="rotate(4 1496 556)">` + path(zig + ' Z', {fill: '#fbf7ee'})
+    + path('M1412 560 H1580', {stroke: SOFT, sw: 1, dash: '2 5'}) + `</g>`;
+  lab += `<g transform="rotate(4 1496 556)">`
+    + text(1412, 468, 'EXPENSE', {size: 10.5, ls: 1.6, fill: EARTH})
+    + text(1412, 500, 'Mileage', {size: 22, italic: true})
+    + text(1412, 530, '42 miles × 55p', {size: 15, fill: SOFT})
+    + text(1580, 600, '£23.10', {size: 26, anchor: 'end'})
+    + text(1412, 640, 'receipt attached', {size: 14, italic: true, fill: EARTH}) + `</g>`;
+  /* the statuses a claim moves through */
+  const st = ['Draft', 'Submitted', 'Approved', 'Paid'];
+  st.forEach((t, i) => {
+    const x = 952 + i * 166;
+    g += rect(x, 808, 138, 40, {r: 20, fill: i === 2 ? '#efd9bb' : 'none', sw: 1.6}) + (i < 3 ? arrow(x + 142, 828, x + 162, 828, {sw: 1.4}) : '');
+    lab += text(x + 69, 834, t, {size: 17, italic: i === 2, anchor: 'middle', fill: i === 2 ? EARTH : INK});
+  });
+  SPREADS.push({file: 'timesheets.svg', svg: book(
+    chapter('V', 'Timesheets and expenses, approved once',
+      'Placements paid by the week are claimed on a timesheet: days or hours against the placement’s agreed rates, pre-filled from the contracted hours. Expenses go in alongside, with their receipts. Named approvers sign off, and on approval the rates are fixed and every line is priced for invoicing and pay.',
+      ['Entered by the worker, the agency, or on their behalf', 'Rejected with a reason; paid weeks are final', 'Mileage and other types set by each client'])
+    + wash(1140, 560, 230, 250, WASH.sage, .3) + wash(1500, 560, 120, 150, WASH.ochre, .35)
+    + ink(g) + lab,
+    5)});
+}
+
+/* VI — the week, checked */
 {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const x0 = 1000, cw = 86, y0 = 390, rh = 84;
@@ -283,16 +330,16 @@ SPREADS.push({file: 'requests.svg', svg: book(
     cl += ink(tick(x, y - 10)) + text(x + 34, y, c, {size: 21, italic: true});
   });
   SPREADS.push({file: 'shifts.svg', svg: book(
-    chapter('V', 'Shifts, checked every time',
+    chapter('VI', 'Shifts, checked every time',
       'Day to day, Opus Magnum is a shift platform: pools, sites, rotas and timesheets. Every booking runs the same checks, however it is made, and compliance is watched continuously rather than at onboarding alone.',
       ['Every booking route runs every check', 'Expiring documents chased before they lapse', 'Warnings when a rate would lose money'])
     + fills + ink(g) + lab + cl,
-    5)});
+    6)});
 }
 
-/* VI — one set of priced lines, two documents */
+/* VII — one set of priced lines, two documents */
 SPREADS.push({file: 'invoicing.svg', svg: book(
-  chapter('VI', 'Invoices that agree with each other',
+  chapter('VII', 'Invoices that agree with each other',
     'Every approved shift, timesheet line and expense becomes a priced line. Clients receive sales invoices and agencies receive self-bills, both drawn from the same lines, so the two sides of every placement always reconcile.',
     ['Priced lines kept in step, and swept nightly', 'Credits raised against issued documents', 'Cost codes carried through to the invoice'])
   + wash(1060, 470, 140, 120, WASH.blue, .35) + wash(1450, 470, 140, 120, WASH.rose, .35) + wash(1255, 760, 220, 80, WASH.ochre, .4)
@@ -308,30 +355,30 @@ SPREADS.push({file: 'invoicing.svg', svg: book(
   + text(1450, 600, 'TO THE AGENCY', {size: 12, ls: 2, anchor: 'middle', fill: EARTH})
   + text(1255, 856, 'Priced lines', {size: 24, italic: true, anchor: 'middle'})
   + capRight('Both sides of the placement, from the same lines.'),
-  6)});
+  7)});
 
-/* VII — exports */
+/* VIII — exports */
 {
   const files = ['Sales', 'Purchase', 'Payroll', 'Umbrella', 'BACS'];
   let g = rect(1010, 360, 490, 56, {fill: '#fbf7ee'}), lab = text(1255, 396, 'Approved and issued items', {size: 22, italic: true, anchor: 'middle'});
   files.forEach((f, i) => {
     const x = 990 + i * 112;
     g += sheet(x, 500, 86, 108, 3, {top: 58, fill: i === 4 ? '#efd9bb' : '#fbf7ee'}) + arrow(1255 + (x + 43 - 1255) * .35, 420, x + 43, 492, {sw: 1.6});
-    lab += text(x + 43, 538, f, {size: 19, italic: true, anchor: 'middle'});
+    lab += text(x + 40, 538, f, {size: 14, italic: true, anchor: 'middle'});
   });
   g += padlock(1255, 700, 1.3);
   lab += text(1255, 790, 'Stored encrypted, with its SHA-256', {size: 21, italic: true, anchor: 'middle'})
     + text(1255, 820, 'a download that no longer matches is refused', {size: 17, anchor: 'middle', fill: SOFT});
   SPREADS.push({file: 'exports.svg', svg: book(
-    chapter('VII', 'Exports and payments, never twice',
+    chapter('VIII', 'Exports and payments, never twice',
       'Finance gets files for its own ledgers: sales, purchase, payroll and umbrella, plus a BACS file of the self-bills due. Each item can sit on one live export only, and every file is kept encrypted with its checksum.',
       ['Nominal codes by cost code, site or client', 'Bank details sealed, and only ever shown masked', 'A mistaken export can be reverted within 7 days'])
     + wash(1255, 560, 290, 120, WASH.sage, .35) + wash(1255, 720, 80, 70, WASH.ochre, .5)
     + ink(g) + lab + capRight('Each item on one live export, never two.'),
-    7)});
+    8)});
 }
 
-/* VIII — the audit trail and IR35 */
+/* IX — the audit trail and IR35 */
 {
   const rows = [['08 Oct 09:14', 'Rate agreed over the cap', 'MSP'], ['08 Oct 09:02', 'Placement approved', 'Compliance'],
     ['07 Oct 16:40', 'Candidate shortlisted', 'Agency'], ['07 Oct 11:15', 'Request released, tier 1', 'System']];
@@ -345,15 +392,15 @@ SPREADS.push({file: 'invoicing.svg', svg: book(
   g += padlock(1570, 410) + rect(1046, 690, 340, 140, {fill: '#efe5d3', sw: 1.4}) + rect(1032, 676, 340, 140, {fill: '#f6eee0', sw: 1.6})
     + rect(1018, 662, 340, 140, {fill: '#fbf7ee'});
   lab += caps(1040, 700, 'IR35 determination', {size: 13}) + text(1040, 742, 'Outside IR35', {size: 30, italic: true})
-    + text(1040, 776, 'by the client · SDS on file · reason recorded', {size: 16, fill: SOFT})
+    + text(1040, 776, 'by the client · SDS on file · reason recorded', {size: 13.5, fill: SOFT})
     + text(1400, 750, 'amended,', {size: 19, italic: true, fill: EARTH}) + text(1400, 774, 'never overwritten', {size: 19, italic: true, fill: EARTH});
   SPREADS.push({file: 'audit.svg', svg: book(
-    chapter('VIII', 'A record that cannot be rewritten',
+    chapter('IX', 'A record that cannot be rewritten',
       'Every change is written to an append-only audit trail that the application itself cannot edit or delete. IR35 determinations are kept the same way: each engagement’s status, who decided it and why, with the SDS on file.',
       ['Audit rows protected at the database', 'Determinations amended, never overwritten', 'Data subject requests handled in the record'])
     + wash(1240, 480, 300, 130, WASH.blue, .25) + wash(1190, 740, 200, 80, WASH.ochre, .35)
     + ink(g) + lab + capRight('Who changed what, and when, for as long as it matters.'),
-    8)});
+    9)});
 }
 
 for (const s of SPREADS) writeFileSync(join(ROOT, 'spreads', s.file), s.svg);
