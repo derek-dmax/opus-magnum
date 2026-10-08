@@ -45,7 +45,7 @@ button{font:inherit}
 .wash{
   position:fixed;inset:0;z-index:-2;pointer-events:none;
   background:url(assets/bg-wash.jpg) center top / cover no-repeat;
-  opacity:.85;
+  opacity:.4;
 }
 .wash:after{
   content:"";position:absolute;inset:0;
@@ -99,7 +99,7 @@ button{font:inherit}
   padding:clamp(112px,13svh,152px) 0 clamp(72px,10svh,120px);
 }
 .botany{
-  position:absolute;bottom:0;width:clamp(120px,15vw,250px);opacity:.5;
+  position:absolute;bottom:0;width:clamp(120px,15vw,250px);opacity:.28;
   pointer-events:none;user-select:none;z-index:0;
 }
 .botany.l{left:clamp(-40px,-1vw,0px);bottom:2%}
@@ -149,11 +149,12 @@ button{font:inherit}
     /* the paper is .397 of the frame's width tall; with the bands trimmed,
        the paper plus caption and tools take about .426 of it, under ~310px
        of header */
-    --book:min(80vw,(100svh - 310px) * 2.35,1800px);
+    --book:min(92vw,(100svh - 310px) * 2.73,2100px);
     flex:0 0 auto;width:var(--book);max-width:none;
-    margin-top:calc(var(--book) * -.145);
-    margin-bottom:calc(var(--book) * -.125);
+    margin-top:calc(var(--book) * -.157);
+    margin-bottom:calc(var(--book) * -.146);
   }
+  .hero{padding-top:96px}
 }
 .sb-tilt{
   position:relative;
