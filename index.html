@@ -32,7 +32,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
 body{
   font-family:var(--font);font-weight:400;background:var(--paper);color:var(--ink);
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
@@ -141,15 +141,15 @@ button{font:inherit}
   position:relative;flex:1 1;min-width:0;max-width:900px;
   perspective:1750px;perspective-origin:50% 46%;
 }
-/* on large screens the book grows with the window, bounded by its height so
+/* above phone widths the book grows with the window, bounded by its height so
    the spread still fits above the fold; the spreads' transparent bands above
    and below the paper are partly pulled back in so the page stays compact */
-@media (min-width:1200px){
+@media (min-width:641px){
   .sb-3d{
     /* the paper is .397 of the frame's width tall; with the bands trimmed,
        the paper plus caption and tools take about .426 of it, under ~330px
        of header */
-    --book:min(92vw,(100svh - 330px) * 2.73,2100px);
+    --book:min(92vw,100vw - 110px,(100svh - 330px) * 2.73,2100px);
     flex:0 0 auto;width:var(--book);max-width:none;
     margin-top:calc(var(--book) * -.157);
     margin-bottom:calc(var(--book) * -.146);
